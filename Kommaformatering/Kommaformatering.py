@@ -87,7 +87,7 @@ def main(sti):
         output_file = "rettet_fil.xlsx"
         st.info("Gemmer filen...") 
         df_cleaned.to_excel(output_file, index=False)
-        return output_file
+        return output_file, df_cleaned
     except Exception as e:
         raise Exception(f"Der opstod en fejl under databehandlingen: {e}")
 
