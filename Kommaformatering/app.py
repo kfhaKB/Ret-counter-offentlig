@@ -31,20 +31,6 @@ if uploaded_file is not None:
 
         forlag_brug = lav_overblik(df)
 
-        # Gem plot som et billede
-        plt.figure(figsize=(10, 6))
-        plt.bar(forlag_brug.keys(), forlag_brug.values())
-        plt.xlabel("Forlag")
-        plt.ylabel("Brug")
-        plt.title("Top 10 Forlag Brug")
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
-
-        img_buffer = io.BytesIO()
-        plt.savefig(img_buffer, format='png')
-        img_buffer.seek(0)
-        img_bytes = img_buffer.getvalue()
-
         with open(output_file, "rb") as f:
             excel_bytes = f.read()
 
@@ -54,6 +40,24 @@ if uploaded_file is not None:
             file_name="rettet_fil.xlsx",
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
+
+        plt.figure(figsize=(10, 6))
+        st.info("Behandler barplot...")
+        plt.bar(forlag_brug.keys(), forlag_brug.values())
+        st.info("Behandler lavet barplot...")
+        plt.xlabel("Forlag")
+        plt.ylabel("Brug")
+        plt.title("Top 10 Forlag Brug")
+        plt.xticks(rotation=45, ha='right')
+        plt.tight_layout()
+
+        st.info("laver filen...")
+        img_buffer = io.BytesIO()
+        plt.savefig(img_buffer, format='png')
+        img_buffer.seek(0)
+        img_bytes = img_buffer.getvalue()
+
+        st.info("downloader billede filen...")
 
         st.download_button(
             label="Download Plot som PNG",
