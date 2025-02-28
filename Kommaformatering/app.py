@@ -26,7 +26,7 @@ if uploaded_file is not None:
             f.write(file_bytes)
 
         st.info("Behandler filen...")
-        output_file = main(file_name)
+        output_file, df = main(file_name)
         st.success("Filen er blevet behandlet!")
 
         forlag_brug = lav_overblik(df)
