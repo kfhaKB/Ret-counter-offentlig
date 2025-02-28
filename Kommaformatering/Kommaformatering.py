@@ -1,5 +1,6 @@
 import pandas as pd
 import os
+import streamlit as st
 
 def load_data(sti, skip_rækker=13):
     """Indlæser data fra en fil (csv, xlsx, txt)."""
@@ -73,17 +74,23 @@ def læs_rækker(række):
 def main(sti):
     """Hovedfunktion til at behandle data og gemme som Excel."""
     try:
+        st.info("Indlæser data...") 
         df, filtype = load_data(sti)
+        st.info("Data indlæst.") 
         if filtype == ".txt":
             df_cleaned = df
         else:
+            st.info("Renser data...") 
             rækker = [læs_rækker(row) for _, row in df.iterrows()]
             rækker = [r for r in rækker if r]
             if not rækker:
                 raise ValueError("Ingen gyldige rækker fundet efter behandling.")
             df_cleaned = pd.DataFrame(rækker, columns=df.columns[:len(rækker[0])])
+            st.info("Data renset.") 
         output_file = "rettet_fil.xlsx"
+        st.info("Gemmer filen...") 
         df_cleaned.to_excel(output_file, index=False)
+        st.info("Fil gemt.") 
         return output_file
     except Exception as e:
         raise Exception(f"Der opstod en fejl under databehandlingen: {e}")
