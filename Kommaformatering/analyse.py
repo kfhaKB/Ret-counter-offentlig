@@ -8,11 +8,11 @@ def lav_overblik(df):
 
     forlag_brug = df.groupby('Publisher')['Reporting_Period_Total'].sum()
 
-    st.write(forlag_brug).head(10)
+    st.write(forlag_brug.head(10))
 
     forlag_brug = forlag_brug.sort_values(ascending=False).head(10)
 
-    print(forlag_brug).head(10)
+    print(forlag_brug)
 
     # lav det til en dictionary
     forlag_brug = forlag_brug.to_dict()
