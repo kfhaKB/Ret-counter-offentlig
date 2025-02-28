@@ -42,22 +42,17 @@ if uploaded_file is not None:
         )
 
         plt.figure(figsize=(10, 6))
-        st.info("Behandler barplot...")
         plt.bar(forlag_brug.keys(), forlag_brug.values())
-        st.info("Behandler lavet barplot...")
         plt.xlabel("Forlag")
         plt.ylabel("Brug")
         plt.title("Top 10 Forlag Brug")
         plt.xticks(rotation=45, ha='right')
         plt.tight_layout()
 
-        st.info("laver filen...")
         img_buffer = io.BytesIO()
         plt.savefig(img_buffer, format='png')
         img_buffer.seek(0)
         img_bytes = img_buffer.getvalue()
-
-        st.info("downloader billede filen...")
 
         st.download_button(
             label="Download Plot som PNG",
