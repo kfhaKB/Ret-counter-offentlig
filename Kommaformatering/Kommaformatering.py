@@ -76,7 +76,6 @@ def main(sti):
     try:
         st.info("Indlæser data...") 
         df, filtype = load_data(sti)
-        st.info("Data indlæst.") 
         if filtype == ".txt":
             df_cleaned = df
         else:
@@ -86,11 +85,9 @@ def main(sti):
             if not rækker:
                 raise ValueError("Ingen gyldige rækker fundet efter behandling.")
             df_cleaned = pd.DataFrame(rækker, columns=df.columns[:len(rækker[0])])
-            st.info("Data renset.") 
         output_file = "rettet_fil.xlsx"
         st.info("Gemmer filen...") 
         df_cleaned.to_excel(output_file, index=False)
-        st.info("Fil gemt.") 
         return output_file
     except Exception as e:
         raise Exception(f"Der opstod en fejl under databehandlingen: {e}")
