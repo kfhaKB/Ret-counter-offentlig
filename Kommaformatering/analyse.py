@@ -6,7 +6,7 @@ import streamlit as st
 def lav_overblik(df):
     """Laver et overblik over data med et søjlediagram over top 10 forlag."""
 
-    st.write(df['Reporting_Period_Total'].head(10))
+    st.write(df['Reporting_Period_Total'].sort_values(ascending=False).head(10))
     forlag_brug = df.groupby('Publisher')['Reporting_Period_Total'].sum()
 
     st.write(forlag_brug.head(10))
