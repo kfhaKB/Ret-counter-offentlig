@@ -5,11 +5,18 @@ from Kommaformatering import main
 
 st.title("Filbehandling")
 
-uploaded_file = st.file_uploader("Upload en fil", type=["csv", "xlsx", "txt"])
+MAX_FILE_SIZE = 100 * 1024 * 1024 
+
+uploaded_file = st.file_uploader("Upload en fil (max 100 MB)", type=["csv", "xlsx", "txt"])
 
 if uploaded_file is not None:
     try:
         file_bytes = uploaded_file.getvalue()
+
+        if len(file_bytes) > MAX_FILE_SIZE:
+            st.error(f"Filen er for stor. Maksimal filstørrelse er {MAX_FILE_SIZE / (1024 * 1024):.0f} MB.")
+            st.stop() 
+            
         file_name = uploaded_file.name
 
         with open(file_name, "wb") as f:
