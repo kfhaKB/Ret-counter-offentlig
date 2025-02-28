@@ -20,7 +20,7 @@ if uploaded_file is not None:
             st.error(f"Filen er for stor. Maksimal filstørrelse er {MAX_FILE_SIZE / (1024 * 1024):.0f} MB.")
             st.stop() 
 
-        file_name, df = uploaded_file.name
+        file_name = uploaded_file.name
 
         with open(file_name, "wb") as f:
             f.write(file_bytes)
