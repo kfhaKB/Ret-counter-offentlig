@@ -79,7 +79,6 @@ def main(sti):
         if filtype == ".txt":
             df_cleaned = df
         else:
-            st.info("Renser data...") 
             rækker = [læs_rækker(row) for _, row in df.iterrows()]
             rækker = [r for r in rækker if r]
             if not rækker:
@@ -93,5 +92,5 @@ def main(sti):
         raise Exception(f"Der opstod en fejl under databehandlingen: {e}")
 
 if __name__ == "__main__":
-    sti = r'../Andet/AU usage 2024.csv'
+    sti =...
     main(sti)
