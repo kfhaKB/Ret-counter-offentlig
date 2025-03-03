@@ -1,6 +1,6 @@
 import pandas as pd
 import os
-import streamlit as st
+#import streamlit as st
 
 def load_data(sti, skip_rækker=13):
     """Indlæser data fra en fil (csv, xlsx, txt)."""
@@ -74,7 +74,7 @@ def læs_rækker(række):
 def main(sti):
     """Hovedfunktion til at behandle data og gemme som Excel."""
     try:
-        st.info("Indlæser data...") 
+       # st.info("Indlæser data...") 
         df, filtype = load_data(sti)
         if filtype == ".txt":
             df_cleaned = df
@@ -84,13 +84,22 @@ def main(sti):
             if not rækker:
                 raise ValueError("Ingen gyldige rækker fundet efter behandling.")
             df_cleaned = pd.DataFrame(rækker, columns=df.columns[:len(rækker[0])])
-        output_file = "rettet_fil.xlsx"
-        st.info("Gemmer filen...") 
-        df_cleaned.to_excel(output_file, index=False)
-        return output_file, df_cleaned
+
+        print(sti)
+        rettet_fil_navn = os.path.basename(sti).split(".")[0] 
+        rettet_fil_navn = f"{rettet_fil_navn}.xlsx"
+     #   st.info("Gemmer filen...") 
+        print(rettet_fil_navn)
+        try:
+            base_sti = os.path.join("F:", "BIBPART-K", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "Rettede filer")
+            df_cleaned.to_excel(os.path.join(base_sti, rettet_fil_navn), index=False)
+        except:
+            df_cleaned.to_excel(rettet_fil_navn, index=False)
+
+        return rettet_fil_navn, df_cleaned
     except Exception as e:
         raise Exception(f"Der opstod en fejl under databehandlingen: {e}")
 
 if __name__ == "__main__":
-    sti =...
+    sti =r'F:\BIBPART-K\ALF\ALF organisation\Grupper\Analysegruppen\Kommaformatering\Filer med dårligt format\AU usage 2024.csv'
     main(sti)

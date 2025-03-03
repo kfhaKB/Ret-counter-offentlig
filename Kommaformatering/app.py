@@ -1,10 +1,10 @@
 import streamlit as st
 import pandas as pd
 import os
-from Kommaformatering import main 
 import matplotlib.pyplot as plt
 import io
 from analyse import lav_overblik
+from find_konverter import find_konverter
 
 st.title("Filbehandling")
 
@@ -26,7 +26,7 @@ if uploaded_file is not None:
             f.write(file_bytes)
 
         st.info("Behandler filen...")
-        output_file, df = main(file_name)
+        output_file, df = find_konverter(file_name)
         st.success("Filen er blevet behandlet!")
 
         forlag_brug = lav_overblik(df)
