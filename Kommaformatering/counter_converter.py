@@ -104,7 +104,7 @@ class DataProcessor:
             print(f"Fejl ved behandling af række: {e}")
             return None
 
-    def process_data(self):
+    def process_csv_og_excel_data(self):
         """Behandler data og returnerer renset DataFrame."""
         try:
             df, file_type = self.load_data()
@@ -118,7 +118,7 @@ class DataProcessor:
                 if not processed_rows:
                     raise ValueError("Ingen gyldige rækker fundet efter behandling.")
 
-                return pd.DataFrame(processed_rows, columns=df.columns[:len(processed_rows[0])])
+                return pd.DataFrame(processed_rows[1:], columns=processed_rows[0])
 
         except Exception as e:
             raise Exception(f"Fejl under databehandling: {e}")
@@ -139,7 +139,7 @@ class DataProcessor:
 
     def run(self):
         """Kører den komplette databehandlingspipeline."""
-        df_cleaned = self.process_data()
+        df_cleaned = self.process_csv_og_excel_data()
 
         output_path = self.save_result(df_cleaned)
 
