@@ -92,6 +92,7 @@ def main(sti):
         print(rettet_fil_navn)
         try:
             base_sti = os.path.join("F:", "BIBPART-K", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "Rettede filer")
+            
             df_cleaned.to_excel(os.path.join(base_sti, rettet_fil_navn), index=False)
         except:
             df_cleaned.to_excel(rettet_fil_navn, index=False)
