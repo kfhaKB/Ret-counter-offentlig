@@ -61,8 +61,12 @@ if uploaded_file is not None:
             mime="image/png"
         )
 
+        st.image(img_bytes, use_column_width=True)
+
+        # make an os.remove to keep the directory clean
         os.remove(fil_navn)
         os.remove(output_file)
+
 
     except Exception as e:
         st.error(f"Der opstod en fejl: {e}")

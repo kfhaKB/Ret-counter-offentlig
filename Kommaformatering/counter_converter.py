@@ -39,15 +39,17 @@ class DataProcessor:
 
     def _load_excel(self):
         """Indlæser og parser Excel-filer."""
-        df_org = pd.read_excel(self.file_path, skiprows=0)
-        col = df_org.columns.values[0].split(",")
-        col = [field.replace("'", "").replace('"', '') for field in col]
-
-        df = pd.DataFrame(columns=col)
-        data = df_org.iloc[:, 0]
-        df['Title'] = data
-
-        return df
+        for skip in (self.skip_rows, self.skip_rows + 1):
+            df_org = pd.read_excel(self.file_path, skiprows=skip)
+            col = df_org.columns.values[0].split(",")
+            col = [field.replace("'", "").replace('"', '') for field in col]
+            df = pd.DataFrame(columns=col)
+            if "Title" in df.columns:
+                data = df_org.iloc[:, 0]
+                df['Title'] = data
+                return df
+            
+        raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
     def _load_txt(self):
         """Indlæser og parser tekstfiler med UTF-16-LE-kodning."""
@@ -112,13 +114,14 @@ class DataProcessor:
             if file_type == ".txt":
                 return df
             else:
+                columns = df.columns
                 processed_rows = [self.process_row(row) for _, row in df.iterrows()]
                 processed_rows = [row for row in processed_rows if row]
 
                 if not processed_rows:
                     raise ValueError("Ingen gyldige rækker fundet efter behandling.")
 
-                return pd.DataFrame(processed_rows[1:], columns=processed_rows[0])
+                return pd.DataFrame(processed_rows, columns=columns)
 
         except Exception as e:
             raise Exception(f"Fejl under databehandling: {e}")
