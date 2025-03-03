@@ -1,6 +1,14 @@
 import os
 import pandas as pd
+import chardet
 # import streamlit as st
+
+def detect_encoding(file_path):
+    with open(file_path, 'rb') as f:
+        raw_data = f.read()
+    result = chardet.detect(raw_data)
+    return result['encoding'] 
+
 
 class DataProcessor:
     """Klasse til behandling og rensning af datafiler med problematisk kommaformatering."""
@@ -55,8 +63,8 @@ class DataProcessor:
         """Indlæser og parser tekstfiler med UTF-16-LE-kodning."""
         rows = []
         read = False
-
-        with open(self.file_path, encoding="utf-16-le") as f:
+        fil_encoding = detect_encoding(self.file_path)
+        with open(self.file_path, encoding=fil_encoding) as f:
             lines = f.readlines()
 
         for row in lines:

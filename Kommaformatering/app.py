@@ -34,12 +34,15 @@ if uploaded_file is not None:
         with open(output_file, "rb") as f:
             excel_bytes = f.read()
 
-        st.download_button(
-            label="Download Excel-fil",
-            data=excel_bytes,
-            file_name=os.path.join(os.path.basename(fil_navn).split('.')[0], ".xlsx"),
-            mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-        )
+        col1, col2 = st.columns(2)
+
+        with col1:
+            st.download_button(
+                label="Download Excel-fil",
+                data=excel_bytes,
+                file_name=os.path.join(os.path.basename(fil_navn).split('.')[0], ".xlsx"),
+                mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+            )
 
         plt.figure(figsize=(10, 6))
         plt.bar(forlag_brug.keys(), forlag_brug.values())
@@ -54,19 +57,18 @@ if uploaded_file is not None:
         img_buffer.seek(0)
         img_bytes = img_buffer.getvalue()
 
-        st.download_button(
-            label="Download Plot som PNG",
-            data=img_bytes,
-            file_name="plot.png",
-            mime="image/png"
-        )
+        with col2:
+            st.download_button(
+                label="Download diagram som PNG",
+                data=img_bytes,
+                file_name="plot.png",
+                mime="image/png"
+            )
 
-        st.image(img_bytes, use_column_width=True)
+        st.image(img_bytes)
 
-        # make an os.remove to keep the directory clean
         os.remove(fil_navn)
         os.remove(output_file)
-
 
     except Exception as e:
         st.error(f"Der opstod en fejl: {e}")
