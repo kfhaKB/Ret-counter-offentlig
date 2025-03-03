@@ -151,7 +151,6 @@ def main(file_path, skip_rows=13):
         processor = DataProcessor(file_path, skip_rows)
         output_path, df_cleaned = processor.run()
 
-        print(f"Fil behandlet succesfuldt og gemt til: {output_path}")
         return output_path, df_cleaned
 
     except Exception as e:

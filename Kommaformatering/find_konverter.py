@@ -7,13 +7,10 @@ def find_konverter(sti):
     ]
     
     for name, converter in converters:
-        try:
-            output_file, df_cleaned = converter(sti)
-            return output_file, df_cleaned
-        except:
-            continue 
-    
-    raise Exception("Alle konverteringsfunktioner fejlede")
+        output_file, df_cleaned = converter(sti)
+        
+    return output_file, df_cleaned
+
 
 if __name__ == "__main__":
     base_sti = os.path.join("F:", "BIBPART-K", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format")
