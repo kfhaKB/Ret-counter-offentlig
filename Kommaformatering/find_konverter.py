@@ -14,5 +14,5 @@ def find_konverter(sti):
 
 if __name__ == "__main__":
     base_sti = os.path.join("F:", "BIBPART-K", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format")
-    sti = os.path.join(base_sti, "T&F KURUC_Usage_2024.xlsx")
+    sti = os.path.join(base_sti, "AU usage 2024.csv")
     output_file, df_cleaned = find_konverter(sti)

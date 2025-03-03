@@ -20,13 +20,13 @@ if uploaded_file is not None:
             st.error(f"Filen er for stor. Maksimal filstørrelse er {MAX_FILE_SIZE / (1024 * 1024):.0f} MB.")
             st.stop() 
 
-        file_name = uploaded_file.name
+        fil_navn = uploaded_file.name
 
-        with open(file_name, "wb") as f:
+        with open(fil_navn, "wb") as f:
             f.write(file_bytes)
 
         st.info("Behandler filen...")
-        output_file, df = find_konverter(file_name)
+        output_file, df = find_konverter(fil_navn)
         st.success("Filen er blevet behandlet!")
 
         forlag_brug = lav_overblik(df)
@@ -37,7 +37,7 @@ if uploaded_file is not None:
         st.download_button(
             label="Download Excel-fil",
             data=excel_bytes,
-            file_name=os.path.join(os.path.basename(file_name).split('.')[0], ".xlsx"),
+            file_name=os.path.join(os.path.basename(fil_navn).split('.')[0], ".xlsx"),
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
@@ -60,7 +60,8 @@ if uploaded_file is not None:
             file_name="plot.png",
             mime="image/png"
         )
-        os.remove(file_name)
+
+        os.remove(fil_navn)
         os.remove(output_file)
 
     except Exception as e:
