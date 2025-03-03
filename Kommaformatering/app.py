@@ -16,9 +16,9 @@ if uploaded_file is not None:
     try:
         file_bytes = uploaded_file.getvalue()
 
-        if len(file_bytes) > MAX_FILE_SIZE:
-            st.error(f"Filen er for stor. Maksimal filstørrelse er {MAX_FILE_SIZE / (1024 * 1024):.0f} MB.")
-            st.stop() 
+       # if len(file_bytes) > MAX_FILE_SIZE:
+       #     st.error(f"Filen er for stor. Maksimal filstørrelse er {MAX_FILE_SIZE / (1024 * 1024):.0f} MB.")
+       #     st.stop() 
 
         file_name = uploaded_file.name
 

@@ -13,5 +13,4 @@ def lav_overblik(df):
 
     forlag_brug = forlag_brug.to_dict()
 
-
     return forlag_brug

@@ -74,7 +74,7 @@ def læs_rækker(række):
 def main(sti):
     """Hovedfunktion til at behandle data og gemme som Excel."""
     try:
-       # st.info("Indlæser data...") 
+      #  st.info("Indlæser data...") 
         df, filtype = load_data(sti)
         if filtype == ".txt":
             df_cleaned = df
