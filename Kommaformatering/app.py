@@ -37,7 +37,7 @@ if uploaded_file is not None:
         st.download_button(
             label="Download Excel-fil",
             data=excel_bytes,
-            file_name=os.path.join(os.path.basename(file_name), ".xlsx"),
+            file_name=os.path.join(os.path.split(os.path.basename(file_name),'.')[0], ".xlsx"),
             mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         )
 
