@@ -67,8 +67,6 @@ if uploaded_file is not None:
 
         st.image(img_bytes)
 
-        os.remove(fil_navn)
-        os.remove(output_file)
 
     except Exception as e:
         st.error(f"Der opstod en fejl: {e}")
