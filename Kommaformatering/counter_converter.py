@@ -18,7 +18,7 @@ class DataProcessor:
         self.file_path = file_path
         self.skip_rows = skip_rows
         self.base_output_dir = os.path.join(
-            "F:", "BIBPART-K", "ALF", "ALF organisation", "Grupper",
+            "F:", "BP", "ALF", "ALF organisation", "Grupper",
             "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "Rettede filer"
         )
 
@@ -169,5 +169,5 @@ def main(file_path, skip_rows=13):
         raise
 
 if __name__ == "__main__":
-    file_path = r'F:\BIBPART-K\ALF\ALF organisation\Grupper\Analysegruppen\Kommaformatering\Filer med dårligt format\KU usage 2024.csv'
+    file_path = r'F:\BP\ALF\ALF organisation\Grupper\Analysegruppen\Kommaformatering\Filer med dårligt format\KU usage 2024.csv'
     main(file_path)
