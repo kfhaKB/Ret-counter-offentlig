@@ -3,8 +3,9 @@ import pandas as pd
 import chardet
 import json
 import os
-from læs_json import konverter_json_dr_d2, konverter_json_tr_j3
+from læs_json import konverter_json_dr, konverter_json_tr
 from læs_txt import konverter_txt_tr
+from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
 # import streamlit as st
 
 def detect_encoding(file_path):
@@ -38,6 +39,8 @@ class DataProcessor:
             return self._load_txt(), file_ext
         elif file_ext == ".json":
             return self._load_json(), file_ext
+        elif file_ext == ".tsv":
+            return self._load_tsv(), file_ext
         else:
             raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx eller .txt fil.")
 
@@ -79,10 +82,22 @@ class DataProcessor:
         with open(self.file_path, encoding=fil_encoding) as f:
             json_data = json.load(f)
 
-        if json_data['Report_Header']['Report_ID'] == "DR_D2":
-            df = konverter_json_dr_d2(json_data['Report_Items'])
-        else:
-            df = konverter_json_tr_j3(json_data['Report_Items'])
+        if "DR" in json_data['Report_Header']['Report_ID']:
+            df = konverter_json_dr(json_data['Report_Items'])
+        elif "TR" in json_data['Report_Header']['Report_ID']:
+            df = konverter_json_tr(json_data['Report_Items'])
+
+        return df
+    
+    def _load_tsv(self):
+        fil_encoding = detect_encoding(self.file_path)
+        with open(self.file_path, 'r', encoding=fil_encoding) as file:
+            lines = file.readlines()
+            
+        if "DR" in lines[1]:
+            df = konverter_tsv_dr(lines)
+        elif "TR" in lines[1]:
+            df = konverter_tsv_tr(lines)
 
         return df
 
@@ -119,7 +134,8 @@ class DataProcessor:
         """Behandler data og returnerer renset DataFrame."""
         try:
             df, file_type = self.load_data()
-            if file_type == ".txt" or file_type == ".json":
+            gode_filtyper = [".txt", ".json", ".tsv"]
+            if file_type in gode_filtyper:
                 return df
             else:
                 columns = df.columns
@@ -134,7 +150,7 @@ class DataProcessor:
         except Exception as e:
             raise Exception(f"Fejl under databehandling: {e}")
 
-    def save_result(self, df):
+    def gem_result(self, df):
         """Gemmer den behandlede DataFrame til Excel."""
         base_filename = os.path.basename(self.file_path).split(".")[0]
         output_filename = f"{base_filename}.xlsx"
@@ -151,7 +167,7 @@ class DataProcessor:
     def run(self):
         """Kører den komplette databehandlingspipeline."""
         df_cleaned = self.process_csv_og_excel_data()
-        output_path = self.save_result(df_cleaned)
+        output_path = self.gem_result(df_cleaned)
 
         return output_path, df_cleaned
 

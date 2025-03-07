@@ -2,7 +2,7 @@ import os
 import json
 import pandas as pd
 
-def konverter_json_dr_d2(data):
+def konverter_json_dr(data):
     excel_data = []
 
     for item in data:
@@ -27,7 +27,7 @@ def konverter_json_dr_d2(data):
     df = pd.DataFrame(excel_data)
     return df
 
-def konverter_json_tr_j3(data):
+def konverter_json_tr(data):
     excel_data = []
 
     for item in data:
@@ -79,7 +79,7 @@ if __name__ == "__main__":
         data = json.load(f)
 
     if data['Report_Header']['Report_ID'] == "DR_D2":
-        df = konverter_json_dr_d2(data['Report_Items'])
+        df = konverter_json_dr(data['Report_Items'])
     else:
-        df = konverter_json_tr_j3(data['Report_Items'])
+        df = konverter_json_tr(data['Report_Items'])
 
