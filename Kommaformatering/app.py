@@ -28,12 +28,9 @@ if uploaded_file is not None:
         st.info("Behandler filen...")
         output_file, df = find_konverter(fil_navn)
         st.success("Filen er blevet behandlet!")
-        st.write("Her er de første 5 rækker af data:")
-        st.write(df.head())
 
         forlag_brug = lav_overblik(df)
 
-        st.write("Analyse færdig! Her er et overblik over forlag brug: ")
 
         with open(output_file, "rb") as f:
             excel_bytes = f.read()
