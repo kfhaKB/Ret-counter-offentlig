@@ -3,7 +3,8 @@ import pandas as pd
 import chardet
 import json
 import os
-from læs_json import konverter_dr_d2_til_excel, konverter_tr_j3_til_excel
+from læs_json import konverter_json_dr_d2, konverter_json_tr_j3
+from læs_txt import konverter_txt_tr
 # import streamlit as st
 
 def detect_encoding(file_path):
@@ -66,38 +67,22 @@ class DataProcessor:
 
     def _load_txt(self):
         """Indlæser og parser tekstfiler med UTF-16-LE-kodning."""
-        rows = []
-        read = False
         fil_encoding = detect_encoding(self.file_path)
         with open(self.file_path, encoding=fil_encoding) as f:
             lines = f.readlines()
 
-        for row in lines:
-            row = row.strip()
-            if len(''.join(char for char in row if char.isalnum())) < 2:
-                continue
-
-            if "Title" in row and "Publisher" in row and "Publisher_ID" in row:
-                read = True
-                header = row.split(",")
-                header = [field.replace('\t\t\n', '') for field in header]
-                nr_commas = len(header) - 1
-                rows.append(header)
-                continue
-            elif read:
-                parts = row.rsplit(',', nr_commas)
-                rows.append(parts)
-
-        return pd.DataFrame(rows[1:], columns=rows[0]) if rows else pd.DataFrame()
+        df = konverter_txt_tr(lines)
+        return df
     
     def _load_json(self):
         fil_encoding = detect_encoding(self.file_path)
         with open(self.file_path, encoding=fil_encoding) as f:
             json_data = json.load(f)
+
         if json_data['Report_Header']['Report_ID'] == "DR_D2":
-            df = konverter_dr_d2_til_excel(json_data['Report_Items'])
+            df = konverter_json_dr_d2(json_data['Report_Items'])
         else:
-            df = konverter_tr_j3_til_excel(json_data['Report_Items'])
+            df = konverter_json_tr_j3(json_data['Report_Items'])
 
         return df
 
