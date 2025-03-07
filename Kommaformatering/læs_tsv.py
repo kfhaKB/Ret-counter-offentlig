@@ -11,7 +11,7 @@ def konverter_tsv_tr(lines):
             break
 
     if start_row is None:
-        print("Fejl: 'Title' blev ikke fundet i filen.")
+        print("Fejl: 'Publisher' blev ikke fundet i filen.")
         return
 
     data = [line.strip().split('\t') for line in lines[start_row:]]
