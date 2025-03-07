@@ -28,6 +28,8 @@ if uploaded_file is not None:
         st.info("Behandler filen...")
         output_file, df = find_konverter(fil_navn)
         st.success("Filen er blevet behandlet!")
+        # show df.head()
+        st.write(df.head())
 
         forlag_brug = lav_overblik(df)
 
