@@ -10,7 +10,7 @@ st.title("Filbehandling")
 
 MAX_FILE_SIZE = 100 * 1024 * 1024 
 
-uploaded_file = st.file_uploader("Upload en fil (max 100 MB), ellers kan hjemmesiden ikke håndtere det. Send i stedet filen direkte til analysegruppen.", type=["csv", "xlsx", "txt"])
+uploaded_file = st.file_uploader("Upload en fil (max 100 MB), ellers kan hjemmesiden ikke håndtere det. Send i stedet filen direkte til analysegruppen.", type=["csv", "xlsx", "txt", "json"])
 
 if uploaded_file is not None:
     try:
