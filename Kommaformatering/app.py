@@ -44,28 +44,29 @@ if uploaded_file is not None:
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
 
-        plt.figure(figsize=(10, 6))
-        plt.bar(forlag_brug.keys(), forlag_brug.values())
-        plt.xlabel("Forlag")
-        plt.ylabel("Brug")
-        plt.title("Top 10 Forlag Brug")
-        plt.xticks(rotation=45, ha='right')
-        plt.tight_layout()
+        if forlag_brug is not None:
+            plt.figure(figsize=(10, 6))
+            plt.bar(forlag_brug.keys(), forlag_brug.values())
+            plt.xlabel("Forlag")
+            plt.ylabel("Brug")
+            plt.title("Top 10 Forlag Brug")
+            plt.xticks(rotation=45, ha='right')
+            plt.tight_layout()
 
-        img_buffer = io.BytesIO()
-        plt.savefig(img_buffer, format='png')
-        img_buffer.seek(0)
-        img_bytes = img_buffer.getvalue()
+            img_buffer = io.BytesIO()
+            plt.savefig(img_buffer, format='png')
+            img_buffer.seek(0)
+            img_bytes = img_buffer.getvalue()
 
-        with col2:
-            st.download_button(
-                label="Download diagram som PNG",
-                data=img_bytes,
-                file_name="plot.png",
-                mime="image/png"
-            )
+            with col2:
+                st.download_button(
+                    label="Download diagram som PNG",
+                    data=img_bytes,
+                    file_name="plot.png",
+                    mime="image/png"
+                )
 
-        st.image(img_bytes)
+            st.image(img_bytes)
 
 
     except Exception as e:

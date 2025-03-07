@@ -14,5 +14,9 @@ def find_konverter(sti):
 
 if __name__ == "__main__":
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format")
-    sti = os.path.join(base_sti, "Tr report KU 2024 udsnit.txt")
-    output_file, df_cleaned = find_konverter(sti)
+    filer = os.listdir(base_sti)
+    filer = [fil for fil in filer if "." in fil]
+    for fil in filer:
+        print("Konverterer fil:", fil)
+        sti = os.path.join(base_sti, fil)
+        output_file, df_cleaned = find_konverter(sti)

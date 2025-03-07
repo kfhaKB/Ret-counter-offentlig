@@ -1,6 +1,9 @@
 import os
 import pandas as pd
 import chardet
+import json
+import os
+from læs_json import konverter_dr_d2_til_excel, konverter_tr_j3_til_excel
 # import streamlit as st
 
 def detect_encoding(file_path):
@@ -32,6 +35,8 @@ class DataProcessor:
             return self._load_excel(), file_ext
         elif file_ext == ".txt":
             return self._load_txt(), file_ext
+        elif file_ext == ".json":
+            return self._load_json(), file_ext
         else:
             raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx eller .txt fil.")
 
@@ -84,6 +89,17 @@ class DataProcessor:
                 rows.append(parts)
 
         return pd.DataFrame(rows[1:], columns=rows[0]) if rows else pd.DataFrame()
+    
+    def _load_json(self):
+        fil_encoding = detect_encoding(self.file_path)
+        with open(self.file_path, encoding=fil_encoding) as f:
+            json_data = json.load(f)
+        if json_data['Report_Header']['Report_ID'] == "DR_D2":
+            df = konverter_dr_d2_til_excel(json_data['Report_Items'])
+        else:
+            df = konverter_tr_j3_til_excel(json_data['Report_Items'])
+
+        return df
 
     def process_row(self, row):
         """Renser og behandler en enkelt række fra DataFrame."""
@@ -118,8 +134,7 @@ class DataProcessor:
         """Behandler data og returnerer renset DataFrame."""
         try:
             df, file_type = self.load_data()
-
-            if file_type == ".txt":
+            if file_type == ".txt" or file_type == ".json":
                 return df
             else:
                 columns = df.columns
@@ -151,7 +166,6 @@ class DataProcessor:
     def run(self):
         """Kører den komplette databehandlingspipeline."""
         df_cleaned = self.process_csv_og_excel_data()
-
         output_path = self.save_result(df_cleaned)
 
         return output_path, df_cleaned
