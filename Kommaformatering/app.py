@@ -33,6 +33,8 @@ if uploaded_file is not None:
 
         forlag_brug = lav_overblik(df)
 
+        st.write("Analyse færdig! Her er et overblik over forlag brug: ")
+
         with open(output_file, "rb") as f:
             excel_bytes = f.read()
 
