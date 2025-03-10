@@ -36,6 +36,8 @@ if uploaded_file is not None:
 
         col1, col2 = st.columns(2)
 
+        st.write(output_file)
+
         with col1:
             st.download_button(
                 label="Download Excel-fil",
