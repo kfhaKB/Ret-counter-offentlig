@@ -30,22 +30,22 @@ if uploaded_file is not None:
         st.info("Behandler filen...")
         output_file, df = find_konverter(fil_navn)
 
-        if 'YOP' in df.columns:
-            metric_type_index = list(df.columns).index('YOP')
+        if 'Reporting_Period_Total' in df.columns:
+            metric_type_index = list(df.columns).index('Reporting_Period_Total')
             numeric_columns = df.columns[metric_type_index + 1:]
             for col in numeric_columns:
                 df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0).astype('int64')
 
-        # Save with specified data types
-        with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
-            df.to_excel(writer, index=False)
-            worksheet = writer.sheets['Sheet1']
-            
-            # Set number format for integer columns
-            for idx, col in enumerate(df.columns):
-                if col in numeric_columns:
-                    col_letter = chr(65 + idx)  # Convert column index to letter (A, B, C, etc.)
-                    worksheet.column_dimensions[col_letter].number_format = '0'
+            # Save with specified data types
+            with pd.ExcelWriter(output_file, engine='openpyxl') as writer:
+                df.to_excel(writer, index=False)
+                worksheet = writer.sheets['Sheet1']
+                
+                # Set number format for integer columns
+                for idx, col in enumerate(df.columns):
+                    if col in numeric_columns:
+                        col_letter = chr(65 + idx)  # Convert column index to letter (A, B, C, etc.)
+                        worksheet.column_dimensions[col_letter].number_format = '0'
 
 
         st.success("Filen er blevet behandlet!")
