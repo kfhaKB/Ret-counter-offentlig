@@ -14,6 +14,7 @@ uploaded_file = st.file_uploader("Upload en fil (max 100 MB)", type=["csv", "xls
 
 if uploaded_file is not None:
     try:
+        st.info('Hjemmesiden er i øjeblikket under konstruktion, og derfor kan der forekomme fejl.')
         file_bytes = uploaded_file.getvalue()
 
         if len(file_bytes) > MAX_FILE_SIZE:

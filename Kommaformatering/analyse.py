@@ -10,7 +10,7 @@ def lav_overblik(df):
         return None
         
     df = df.dropna(subset=[kolonne])
-
+    df['Metric_Type'] = df[df['Metric_Type'] == 'Unique_Item_Requests']
     df[kolonne] = df[kolonne].astype(int)
     forlag_brug = df.groupby('Publisher')[kolonne].sum()
 

@@ -3,7 +3,8 @@ import pandas as pd
 
 def konverter_excel_tr(df):
     columns = df.columns
-    processed_rows = [process_row(row) for _, row in df.iterrows()]
+    nr_commas = len(columns) - 1
+    processed_rows = [process_row(row, nr_commas) for _, row in df.iterrows()]
     processed_rows = [row for row in processed_rows if row]
 
     if not processed_rows:
