@@ -11,7 +11,7 @@ def konverter_json_dr(data):
         publisher = item['Publisher']
         for performance in item['Performance']:
             metric_type = performance['Instance'][0]['Metric_Type']
-            count = performance['Instance'][0]['Count']
+            count = int(performance['Instance'][0]['Count'])
             begin_date = performance['Period']['Begin_Date']
             end_date = performance['Period']['End_Date']
             excel_data.append({
@@ -49,7 +49,7 @@ def konverter_json_tr(data):
 
             for instance in performance["Instance"]:
                 metric_type = instance["Metric_Type"]
-                count = instance["Count"]
+                count = int(instance["Count"])
 
                 excel_data.append(
                     {
@@ -82,4 +82,6 @@ if __name__ == "__main__":
         df = konverter_json_dr(data['Report_Items'])
     else:
         df = konverter_json_tr(data['Report_Items'])
+
+    df.to_excel("output.xlsx", index=False)
 
