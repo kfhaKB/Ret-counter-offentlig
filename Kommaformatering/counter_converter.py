@@ -6,6 +6,8 @@ import os
 from læs_json import konverter_json_dr, konverter_json_tr
 from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
+from læs_csv import konverter_csv_tr
+from læs_excel import konverter_excel_tr
 # import streamlit as st
 
 def detect_encoding(file_path):
@@ -32,15 +34,15 @@ class DataProcessor:
         file_ext = os.path.splitext(self.file_path)[-1].lower()
 
         if file_ext == ".csv":
-            return self._load_csv(), file_ext
+            return self._load_csv()
         elif file_ext == ".xlsx":
-            return self._load_excel(), file_ext
+            return self._load_excel()
         elif file_ext == ".txt":
-            return self._load_txt(), file_ext
+            return self._load_txt()
         elif file_ext == ".json":
-            return self._load_json(), file_ext
+            return self._load_json()
         elif file_ext == ".tsv":
-            return self._load_tsv(), file_ext
+            return self._load_tsv()
         else:
             raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx eller .txt fil.")
 
@@ -50,6 +52,7 @@ class DataProcessor:
             df = pd.read_csv(self.file_path, skiprows=skip, sep=',')
             df.columns = [col.replace(";", "") for col in df.columns]
             if "Title" in df.columns:
+                df = konverter_csv_tr(df)
                 return df
 
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
@@ -64,6 +67,7 @@ class DataProcessor:
             if "Title" in df.columns:
                 data = df_org.iloc[:, 0]
                 df['Title'] = data
+                df = konverter_excel_tr(df)
                 return df
             
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
@@ -101,55 +105,6 @@ class DataProcessor:
 
         return df
 
-    def process_row(self, row):
-        """Renser og behandler en enkelt række fra DataFrame."""
-        try:
-            title_parts = row['Title'].split(',"')
-            title_parts = [part.replace('"', '').replace("'", '').replace(";", '') for part in title_parts]
-
-            first_value = title_parts[0]
-            if first_value.endswith(','):
-                first_value = [first_value[:len(first_value) - 1], '', '']
-            else:
-                first_value = [first_value]
-
-            title_parts = [part.split(",") for part in title_parts[1:]]
-            flattened_list = [value for sublist in title_parts for value in sublist]
-            title_parts = first_value + flattened_list
-
-            if len(title_parts) < 10:
-                return None
-
-            if len(title_parts) > 2 and 'Press' in title_parts[2]:
-                title_parts[1] = title_parts[1] + title_parts[2]
-                title_parts.pop(2)
-
-            return title_parts
-
-        except Exception as e:
-            print(f"Fejl ved behandling af række: {e}")
-            return None
-
-    def process_csv_og_excel_data(self):
-        """Behandler data og returnerer renset DataFrame."""
-        try:
-            df, file_type = self.load_data()
-            gode_filtyper = [".txt", ".json", ".tsv"]
-            if file_type in gode_filtyper:
-                return df
-            else:
-                columns = df.columns
-                processed_rows = [self.process_row(row) for _, row in df.iterrows()]
-                processed_rows = [row for row in processed_rows if row]
-
-                if not processed_rows:
-                    raise ValueError("Ingen gyldige rækker fundet efter behandling.")
-
-                return pd.DataFrame(processed_rows, columns=columns)
-
-        except Exception as e:
-            raise Exception(f"Fejl under databehandling: {e}")
-
     def gem_result(self, df):
         """Gemmer den behandlede DataFrame til Excel."""
         base_filename = os.path.basename(self.file_path).split(".")[0]
@@ -166,9 +121,9 @@ class DataProcessor:
 
     def run(self):
         """Kører den komplette databehandlingspipeline."""
-        df_cleaned = self.process_csv_og_excel_data()
+        df_cleaned = self.load_data()
         output_path = self.gem_result(df_cleaned)
-
+    
         return output_path, df_cleaned
 
 def main(file_path, skip_rows=13):
