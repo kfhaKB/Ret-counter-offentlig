@@ -12,9 +12,10 @@ MAX_FILE_SIZE = 100 * 1024 * 1024
 
 uploaded_file = st.file_uploader("Upload en fil (max 100 MB)", type=["csv", "xlsx", "txt", "json","tsv"])
 
+st.info('Hjemmesiden er i øjeblikket under opbygning, vær opmærksom på, at der kan være fejl i filerne.')
+
 if uploaded_file is not None:
     try:
-        st.info('Hjemmesiden er i øjeblikket under konstruktion, og derfor kan der forekomme fejl.')
         file_bytes = uploaded_file.getvalue()
 
         if len(file_bytes) > MAX_FILE_SIZE:
