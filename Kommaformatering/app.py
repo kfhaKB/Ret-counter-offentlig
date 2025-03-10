@@ -31,9 +31,6 @@ if uploaded_file is not None:
         output_file, df = find_konverter(fil_navn)
         st.success("Filen er blevet behandlet!")
 
-        forlag_brug = lav_overblik(df)
-
-
         with open(output_file, "rb") as f:
             excel_bytes = f.read()
 
@@ -46,6 +43,9 @@ if uploaded_file is not None:
                 file_name=os.path.join(os.path.basename(fil_navn).split('.')[0], ".xlsx"),
                 mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             )
+
+
+        forlag_brug = lav_overblik(df)
 
         if forlag_brug is not None:
             plt.figure(figsize=(10, 6))

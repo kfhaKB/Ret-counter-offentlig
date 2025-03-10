@@ -31,6 +31,7 @@ def konverter_csv_tr(df):
     return pd.DataFrame(processed_rows, columns=columns)
 
 if __name__ == "__main__":
+    from analyse import lav_overblik
     file_path = r"F:/BP/ALF/ALF organisation/Grupper/Analysegruppen/Kommaformatering/Filer med dårligt format/TRJ3_Springer_KBNL.csv"
 
     df = None
@@ -50,6 +51,7 @@ if __name__ == "__main__":
             break  # Exit loop after finding Title, regardless of conversion success
     
     if df is not None:
-        print(df)
+        print(df.columns)
+        print(lav_overblik(df))
     else:
         print("No valid data found")

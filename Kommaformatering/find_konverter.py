@@ -14,12 +14,13 @@ def find_konverter(sti):
 
 if __name__ == "__main__":
     from tqdm import tqdm
-    # Kører alle filerne igennem for at tjekke, at de kan konverteres.
+    from analyse import lav_overblik
+    # Kører alle filerne igennem for at tjekke, at de kan konverteres. Anbefales at gøre før push.
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format")
     filer = os.listdir(base_sti)
     filer = [fil for fil in filer if "." in fil]
     tqdm_bar = tqdm(filer, desc="Konverterer filer")
     for fil in tqdm_bar:
-        tqdm_bar.set_postfix_str("Konverterer fil", fil)
         sti = os.path.join(base_sti, fil)
         output_file, df_cleaned = find_konverter(sti)
+        forlag_brug = lav_overblik(df_cleaned)
