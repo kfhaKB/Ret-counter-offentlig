@@ -3,7 +3,7 @@ import pandas as pd
 import chardet
 import json
 import os
-from læs_json import konverter_json_dr, konverter_json_tr
+from læs_json import konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j3, konverter_json_tr_j4
 from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
 from læs_csv import konverter_csv_tr
@@ -18,10 +18,7 @@ def detect_encoding(file_path):
 
 
 class DataProcessor:
-    """Klasse til behandling og rensning af datafiler med problematisk kommaformatering."""
-
     def __init__(self, file_path, skip_rows=13):
-        """Initialiserer med filsti og valgfrit antal rækker, der skal springes over."""
         self.file_path = file_path
         self.skip_rows = skip_rows
         self.base_output_dir = os.path.join(
@@ -30,7 +27,6 @@ class DataProcessor:
         )
 
     def load_data(self):
-        """Indlæser data fra en fil (csv, xlsx, txt) og returnerer dataframe og filtype."""
         file_ext = os.path.splitext(self.file_path)[-1].lower()
 
         if file_ext == ".csv":
@@ -47,7 +43,6 @@ class DataProcessor:
             raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx eller .txt fil.")
 
     def _load_csv(self):
-        """Indlæser og parser CSV-filer."""
         for skip in (self.skip_rows, self.skip_rows + 1):
             df = pd.read_csv(self.file_path, skiprows=skip, sep=',')
             df.columns = [col.replace(";", "") for col in df.columns]
@@ -58,7 +53,6 @@ class DataProcessor:
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
     def _load_excel(self):
-        """Indlæser og parser Excel-filer."""
         for skip in (self.skip_rows, self.skip_rows + 1):
             df_org = pd.read_excel(self.file_path, skiprows=skip)
             col = df_org.columns.values[0].split(",")
@@ -73,7 +67,6 @@ class DataProcessor:
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
     def _load_txt(self):
-        """Indlæser og parser tekstfiler med UTF-16-LE-kodning."""
         fil_encoding = detect_encoding(self.file_path)
         with open(self.file_path, encoding=fil_encoding) as f:
             lines = f.readlines()
@@ -86,11 +79,19 @@ class DataProcessor:
         with open(self.file_path, encoding=fil_encoding) as f:
             json_data = json.load(f)
 
-        if "DR" in json_data['Report_Header']['Report_ID']:
-            df = konverter_json_dr(json_data['Report_Items'])
-        elif "TR" in json_data['Report_Header']['Report_ID']:
-            df = konverter_json_tr(json_data['Report_Items'])
-
+        if json_data['Report_Header']['Report_ID'] == "TR":
+            df = konverter_json_tr_master(json_data['Report_Items'])
+        elif json_data['Report_Header']['Report_ID'] == "TR_J3":
+            df = konverter_json_tr_j3(json_data['Report_Items'])
+        elif json_data['Report_Header']['Report_ID'] == "TR_J4":
+            df = konverter_json_tr_j4(json_data['Report_Items'])
+        elif json_data['Report_Header']['Report_ID'] == "TR_B3":
+            df = konverter_json_tr_b3(json_data['Report_Items'])
+        elif json_data['Report_Header']['Report_ID'] == "DR_D2":
+            df = konverter_json_dr_d2(json_data['Report_Items'])
+        
+        else:
+            raise ValueError(f"Ukendt rapporttype: {json_data['Report_Header']['Report_ID']}")
         return df
     
     def _load_tsv(self):
@@ -106,7 +107,6 @@ class DataProcessor:
         return df
 
     def gem_result(self, df):
-        """Gemmer den behandlede DataFrame til Excel."""
         base_filename = os.path.basename(self.file_path).split(".")[0]
         output_filename = f"{base_filename}.xlsx"
 
@@ -120,14 +120,12 @@ class DataProcessor:
         return output_path
 
     def run(self):
-        """Kører den komplette databehandlingspipeline."""
         df_cleaned = self.load_data()
         output_path = self.gem_result(df_cleaned)
     
         return output_path, df_cleaned
 
 def main(file_path, skip_rows=13):
-    """Hovedfunktion til at behandle data og gemme som Excel."""
     try:
         processor = DataProcessor(file_path, skip_rows)
         output_path, df_cleaned = processor.run()

@@ -21,6 +21,7 @@ if __name__ == "__main__":
     filer = [fil for fil in filer if "." in fil]
     tqdm_bar = tqdm(filer, desc="Konverterer filer")
     for fil in tqdm_bar:
+        tqdm_bar.set_postfix(fil=fil)
         sti = os.path.join(base_sti, fil)
         output_file, df_cleaned = find_konverter(sti)
         forlag_brug = lav_overblik(df_cleaned)
