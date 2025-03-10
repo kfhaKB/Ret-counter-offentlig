@@ -3,7 +3,7 @@ import pandas as pd
 import chardet
 import json
 import os
-from læs_json import konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j3, konverter_json_tr_j4
+from læs_json import konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j1, konverter_json_tr_j3, konverter_json_tr_j4
 from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
 from læs_csv import konverter_csv_tr
@@ -21,9 +21,24 @@ class DataProcessor:
     def __init__(self, file_path, skip_rows=13):
         self.file_path = file_path
         self.skip_rows = skip_rows
+
+        file_type_mapping = {
+            ".csv": "CSV",
+            ".xlsx": "Excel",
+            ".txt": "TXT",
+            ".json": "JSON",
+            ".tsv": "TSV",
+        }
+
+        file_ext = os.path.splitext(self.file_path)[-1].lower()
+
+        if file_ext not in file_type_mapping:
+            raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx, .txt, .json eller .tsv fil.")
+
         self.base_output_dir = os.path.join(
             "F:", "BP", "ALF", "ALF organisation", "Grupper",
-            "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "Rettede filer"
+            "Analysegruppen", "Kommaformatering", "Filer med dårligt format",
+            file_type_mapping[file_ext], "Rettede filer"
         )
 
     def load_data(self):
@@ -81,6 +96,8 @@ class DataProcessor:
 
         if json_data['Report_Header']['Report_ID'] == "TR":
             df = konverter_json_tr_master(json_data['Report_Items'])
+        elif json_data['Report_Header']['Report_ID'] == "TR_J1":
+            df = konverter_json_tr_j1(json_data['Report_Items'])
         elif json_data['Report_Header']['Report_ID'] == "TR_J3":
             df = konverter_json_tr_j3(json_data['Report_Items'])
         elif json_data['Report_Header']['Report_ID'] == "TR_J4":

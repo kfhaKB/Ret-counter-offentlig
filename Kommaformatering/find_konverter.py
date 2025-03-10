@@ -16,9 +16,11 @@ if __name__ == "__main__":
     from tqdm import tqdm
     from analyse import lav_overblik
     # Kører alle filerne igennem for at tjekke, at de kan konverteres. Anbefales at gøre før push.
-    base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format")
+    mappe = "CSV"
+    base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", mappe)
     filer = os.listdir(base_sti)
     filer = [fil for fil in filer if "." in fil]
+    print("Konverterer filer fra mappen:", mappe)
     tqdm_bar = tqdm(filer, desc="Konverterer filer")
     for fil in tqdm_bar:
         tqdm_bar.set_postfix(fil=fil)

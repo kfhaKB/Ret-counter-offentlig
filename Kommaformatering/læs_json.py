@@ -111,6 +111,46 @@ def konverter_json_tr_master(data):
 
     return pd.DataFrame(excel_data)
 
+def konverter_json_tr_j1(data):
+
+    excel_data = []
+
+    for item in data:
+        platform = item.get("Platform")
+        title = item.get("Title")
+        publisher = item.get("Publisher")
+        item_ids = item.get("Item_ID", [])
+        performances = item.get("Performance", [])
+
+        print_issn = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "Print_ISSN"), None)
+        online_issn = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "Online_ISSN"), None)
+        uri = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "URI"), None)
+
+        for performance in performances:
+            instances = performance.get("Instance", [])
+            period = performance.get("Period", {})
+            begin_date = period.get("Begin_Date")
+            end_date = period.get("End_Date")
+
+            for instance in instances:
+                metric_type = instance.get("Metric_Type")
+                count = instance.get("Count")
+
+                excel_data.append({
+                    "Platform": platform,
+                    "Title": title,
+                    "Publisher": publisher,
+                    "Print ISSN": print_issn,
+                    "Online ISSN": online_issn,
+                    "URI": uri,
+                    "Begin Date": begin_date,
+                    "End Date": end_date,
+                    "Metric Type": metric_type,
+                    "Count": count,
+                })
+
+    return pd.DataFrame(data)
+
 def konverter_json_tr_j3(data):
     excel_data = []
 
