@@ -3,7 +3,7 @@ import pandas as pd
 import chardet
 import json
 import os
-from læs_json import konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j1, konverter_json_tr_j3, konverter_json_tr_j4
+from læs_json import json_header, konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j1, konverter_json_tr_j3, konverter_json_tr_j4
 from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
 from læs_csv import konverter_csv_tr

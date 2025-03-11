@@ -2,6 +2,31 @@ import os
 import json
 import pandas as pd
 
+def json_header(data):
+    excel_data = []
+    
+    report_name = data["Report_Header"]["Report_Name"]
+    created = data["Report_Header"]["Created"]
+    created_by = data["Report_Header"]["Created_By"]
+    customer_ID = data["Report_Header"]["Customer_ID"]
+    report_ID = data["Report_Header"]["Report_ID"]
+    release = data["Report_Header"]["Release"]
+    inst_name = data["Report_Header"]["Institution_Name"]
+    excel_data.append({
+        "Report_Name": report_name,
+        "Created": created,
+        "Created_By": created_by,
+        "Customer_ID": customer_ID, 
+        "Report_ID": report_ID,
+        "Release": release, 
+        "Institution_Name": inst_name
+    })
+
+    df = pd.DataFrame(excel_data)
+    df = df.melt()
+    return df
+
+
 def konverter_json_dr_d2(data):
     excel_data = []
 
