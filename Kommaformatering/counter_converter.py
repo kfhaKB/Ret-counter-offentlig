@@ -130,7 +130,6 @@ class DataProcessor:
     def gem_result(self, df, header):
         base_filename = os.path.basename(self.file_path).split(".")[0]
         output_filename = f"{base_filename}.xlsx"
-
         try:
             output_path = os.path.join(self.base_output_dir, output_filename)
             with pd.ExcelWriter(output_path) as writer:
@@ -138,12 +137,11 @@ class DataProcessor:
                 header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
                 st.info("er her 111")
         except Exception:
+                output_path = output_filename
                 with pd.ExcelWriter(output_path) as writer:
                     df.to_excel(writer, sheet_name='Counter',index=False)
                     header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
-                st.info("er her!")
-                output_path = output_filename
-        st.info(output_path)
+
         return output_path
 
     def run(self):
