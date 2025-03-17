@@ -24,6 +24,7 @@ def json_header(data):
 
     df = pd.DataFrame(excel_data)
     df = df.melt()
+    df.columns = [col.title() for col in df.columns]
     return df
 
 

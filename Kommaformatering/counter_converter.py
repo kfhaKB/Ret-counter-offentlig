@@ -63,7 +63,7 @@ class DataProcessor:
             df.columns = [col.replace(";", "") for col in df.columns]
             if "Title" in df.columns:
                 df = konverter_csv_tr(df)
-                return df
+                return df, None
 
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
@@ -77,7 +77,7 @@ class DataProcessor:
                 data = df_org.iloc[:, 0]
                 df['Title'] = data
                 df = konverter_excel_tr(df)
-                return df
+                return df, None
             
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
@@ -87,12 +87,14 @@ class DataProcessor:
             lines = f.readlines()
 
         df = konverter_txt_tr(lines)
-        return df
+        return df, None
     
     def _load_json(self):
         fil_encoding = detect_encoding(self.file_path)
         with open(self.file_path, encoding=fil_encoding) as f:
             json_data = json.load(f)
+
+        header = json_header(json_data)
 
         if json_data['Report_Header']['Report_ID'] == "TR":
             df = konverter_json_tr_master(json_data['Report_Items'])
@@ -109,7 +111,7 @@ class DataProcessor:
         
         else:
             raise ValueError(f"Ukendt rapporttype: {json_data['Report_Header']['Report_ID']}")
-        return df
+        return df, header
     
     def _load_tsv(self):
         fil_encoding = detect_encoding(self.file_path)
@@ -125,24 +127,28 @@ class DataProcessor:
             for i in range(len(df)):
                 df[i] = df[i].replace('"', '')
 
-        return df
+        return df, None
 
-    def gem_result(self, df):
+    def gem_result(self, df, header):
         base_filename = os.path.basename(self.file_path).split(".")[0]
         output_filename = f"{base_filename}.xlsx"
 
         try:
             output_path = os.path.join(self.base_output_dir, output_filename)
-            df.to_excel(output_path, index=False)
-        except Exception as e:
-            df.to_excel(output_filename, index=False)
-            output_path = output_filename
+            with pd.ExcelWriter(output_path) as writer:
+                df.to_excel(writer, sheet_name='Counter', index=False)
+                header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
+        except Exception:
+                with pd.ExcelWriter(output_path) as writer:
+                    df.to_excel(writer, sheet_name='Counter',index=False)
+                    header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
+                output_path = output_filename
 
         return output_path
 
     def run(self):
-        df_cleaned = self.load_data()
-        output_path = self.gem_result(df_cleaned)
+        df_cleaned, header = self.load_data()
+        output_path = self.gem_result(df_cleaned, header)
     
         return output_path, df_cleaned
 
