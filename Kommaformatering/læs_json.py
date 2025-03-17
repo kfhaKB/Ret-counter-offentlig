@@ -139,79 +139,77 @@ def konverter_json_tr_master(data):
 def konverter_json_tr_j1(data):
 
     excel_data = []
-
     for item in data:
-        platform = item.get("Platform")
-        title = item.get("Title")
-        publisher = item.get("Publisher")
-        item_ids = item.get("Item_ID", [])
-        performances = item.get("Performance", [])
-
-        print_issn = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "Print_ISSN"), None)
-        online_issn = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "Online_ISSN"), None)
-        uri = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "URI"), None)
+        platform = item["Platform"]
+        title = item["Title"]
+        publisher = item["Publisher"]
+        item_ids = item["Item_ID"]
+        performances = item["Performance"]
 
         for performance in performances:
-            instances = performance.get("Instance", [])
-            period = performance.get("Period", {})
-            begin_date = period.get("Begin_Date")
-            end_date = period.get("End_Date")
+            period = performance["Period"]
+            begin_date = period["Begin_Date"]
+            end_date = period["End_Date"]
 
-            for instance in instances:
-                metric_type = instance.get("Metric_Type")
-                count = instance.get("Count")
+            for instance in performance["Instance"]:
+                metric_type = instance["Metric_Type"]
+                count = instance["Count"]
 
-                excel_data.append({
+                flattened_item = {
                     "Platform": platform,
                     "Title": title,
                     "Publisher": publisher,
-                    "Print ISSN": print_issn,
-                    "Online ISSN": online_issn,
-                    "URI": uri,
-                    "Begin Date": begin_date,
-                    "End Date": end_date,
-                    "Metric Type": metric_type,
+                    "Begin_Date": begin_date,
+                    "End_Date": end_date,
+                    "Metric_Type": metric_type,
                     "Count": count,
-                })
+                }
 
-    return pd.DataFrame(data)
+                for item_id in item_ids:
+                    flattened_item[item_id["Type"]] = item_id["Value"]
+
+                excel_data.append(flattened_item)
+
+    return pd.DataFrame(excel_data)
+
 
 def konverter_json_tr_j3(data):
+
     excel_data = []
-
     for item in data:
-        platform = item.get("Platform")
-        access_type = item.get("Access_Type")
-        title = item.get("Title")
-        publisher = item.get("Publisher")
-        item_ids = item.get("Item_ID", [])
-        performances = item.get("Performance", [])
-
-        proprietary_id = next((id_info["Value"] for id_info in item_ids if id_info["Type"] == "Proprietary"), None)
+        platform = item["Platform"]
+        access_type = item['Access_Type']
+        title = item["Title"]
+        publisher = item["Publisher"]
+        item_ids = item["Item_ID"]
+        performances = item["Performance"]
 
         for performance in performances:
-            instances = performance.get("Instance", [])
-            period = performance.get("Period", {})
-            begin_date = period.get("Begin_Date")
-            end_date = period.get("End_Date")
+            period = performance["Period"]
+            begin_date = period["Begin_Date"]
+            end_date = period["End_Date"]
 
-            for instance in instances:
-                metric_type = instance.get("Metric_Type")
-                count = instance.get("Count")
+            for instance in performance["Instance"]:
+                metric_type = instance["Metric_Type"]
+                count = instance["Count"]
 
-                excel_data.append({
+                flattened_item = {
                     "Platform": platform,
-                    "Access Type": access_type,
+                    "Access_Type": access_type,
                     "Title": title,
                     "Publisher": publisher,
-                    "Proprietary ID": proprietary_id,
-                    "Begin Date": begin_date,
-                    "End Date": end_date,
-                    "Metric Type": metric_type,
+                    "Begin_Date": begin_date,
+                    "End_Date": end_date,
+                    "Metric_Type": metric_type,
                     "Count": count,
-                })
+                }
 
-    return pd.DataFrame(data)  
+                for item_id in item_ids:
+                    flattened_item[item_id["Type"]] = item_id["Value"]
+
+                excel_data.append(flattened_item)
+
+    return  pd.DataFrame(excel_data)  
 
 def konverter_json_tr_j4(data):
     excel_data = []
@@ -252,18 +250,24 @@ def konverter_json_tr_j4(data):
                     "Count": count,
                 })
 
-    return pd.DataFrame(data)
+    return pd.DataFrame(excel_data)
+
 
 if __name__ == "__main__":
-    base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "SUSHI_Springer (SpringerLink or Springer Nature)_dr_d2_202412_102570789500005763_0_response.json")
+    base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "JSON", "SUSHI_Wiley Online Library_tr_j4_202312_102572782800005763_0_response.json")
 
     with open(base_sti, encoding="utf-8") as f:
         data = json.load(f)
 
     if data['Report_Header']['Report_ID'] == "DR_D2":
         df = konverter_json_dr_d2(data['Report_Items'])
-    else:
+    elif data['Report_Header']['Report_ID'] == "TR_B3":
         df = konverter_json_tr_b3(data['Report_Items'])
+    elif data['Report_Header']['Report_ID'] == "TR_J1":
+        df = konverter_json_tr_j1(data['Report_Items'])
+    elif data['Report_Header']['Report_ID'] == "TR_J3":
+        df = konverter_json_tr_j3(data['Report_Items'])
+    elif data['Report_Header']['Report_ID'] == "TR_J4":
+        df = konverter_json_tr_j4(data['Report_Items'])
 
     df.to_excel("output.xlsx", index=False)
-

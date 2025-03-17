@@ -24,7 +24,10 @@ def konverter_tsv_tr(lines):
     if 'Metric_Type' in df.columns:
         metric_type_index =  list(df.columns).index('Metric_Type')
         for col in df.columns[metric_type_index+1:]:
-            df[col] = pd.to_numeric(df[col])
+            try:
+                df[col] = pd.to_numeric(df[col])
+            except:
+                df[col] = df[col]
         
 
     return df
