@@ -21,11 +21,20 @@ def konverter_tsv_tr(lines):
 
     df = pd.DataFrame(data[1:], columns=data[0])
     df.columns = [col.replace('"', '') for col in df.columns]
-    df = df.replace({'"': ''}, regex=True)
 
-    #index_names = df[df['Publisher'] == 'None'].index 
-    #df.drop(index_names, inplace = True) 
-    df.drop(index=df.index[-1], axis=0, inplace=True)
+    def remove_first_quote(s):
+        if isinstance(s, str):
+            return s.replace('"', '', 1)
+        return s
+    df = df.map(remove_first_quote)
+    
+    def remove_last_quote(s):
+        if isinstance(s, str):
+            return s[:s.rfind('"')] + s[s.rfind('"')+1:]
+        return s
+    df = df.map(remove_last_quote)
+
+    df = df.dropna()
 
     if 'Metric_Type' in df.columns:
         metric_type_index =  list(df.columns).index('Metric_Type')
@@ -59,6 +68,20 @@ def konverter_tsv_dr(lines):
     df = pd.DataFrame(data[1:], columns=data[0])
     df.columns = [col.replace('"', '') for col in df.columns]
     df = df.replace({'"': ''}, regex=True)
+    
+    def remove_first_quote(s):
+        if isinstance(s, str):
+            return s.replace('"', '', 1)
+        return s
+    df = df.map(remove_first_quote)
+    
+    def remove_last_quote(s):
+        if isinstance(s, str):
+            return s[:s.rfind('"')] + s[s.rfind('"')+1:]
+        return s
+    df = df.map(remove_last_quote)
+    
+    df = df.dropna()
 
     if 'Metric_Type' in df.columns:
         metric_type_index =  list(df.columns).index('Metric_Type')
