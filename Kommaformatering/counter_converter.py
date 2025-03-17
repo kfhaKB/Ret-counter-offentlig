@@ -138,10 +138,13 @@ class DataProcessor:
                 header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
                 st.info("er her 111")
         except Exception:
+                st.info("er her! 2")
                 with pd.ExcelWriter(output_path) as writer:
+                    st.info("laver df")
                     df.to_excel(writer, sheet_name='Counter',index=False)
+                    st.info("laver header")
                     header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
-                st.info("er her!")
+                st.info("er her! 3")
                 output_path = output_filename
                 print(output_path)
         st.info(output_path)
