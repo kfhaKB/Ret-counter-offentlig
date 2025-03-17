@@ -118,10 +118,10 @@ class DataProcessor:
             
         if "DR" in lines[1]:
             df = konverter_tsv_dr(lines)
-            df.replace('"', '')
+            df.columns = [col.replace('"', '') for col in df.columns]
         elif "TR" in lines[1]:
             df = konverter_tsv_tr(lines)
-            df.replace('"', '')
+            df.columns = [col.replace('"', '') for col in df.columns]
 
         return df
 
