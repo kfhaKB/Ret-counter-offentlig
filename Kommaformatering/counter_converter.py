@@ -8,7 +8,7 @@ from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
 from læs_csv import konverter_csv_tr
 from læs_excel import konverter_excel_tr
-# import streamlit as st
+import streamlit as st
 
 def detect_encoding(file_path):
     with open(file_path, 'rb') as f:
@@ -140,9 +140,9 @@ class DataProcessor:
                 with pd.ExcelWriter(output_path) as writer:
                     df.to_excel(writer, sheet_name='Counter',index=False)
                     header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
-                    
+                st.info("er her!")
                 output_path = output_filename
-
+        st.info(output_path)
         return output_path
 
     def run(self):
