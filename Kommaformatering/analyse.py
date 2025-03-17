@@ -32,4 +32,4 @@ if __name__ == "__main__":
         lines = file.readlines()
     df = konverter_tsv_tr(lines)
     print(df)
-    lav_overblik(df)    
+    lav_overblik(df)  

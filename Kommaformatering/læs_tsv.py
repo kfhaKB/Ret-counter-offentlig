@@ -23,14 +23,17 @@ def konverter_tsv_tr(lines):
     df.columns = [col.replace('"', '') for col in df.columns]
     df = df.replace({'"': ''}, regex=True)
 
+    #index_names = df[df['Publisher'] == 'None'].index 
+    #df.drop(index_names, inplace = True) 
+    df.drop(index=df.index[-1], axis=0, inplace=True)
+
     if 'Metric_Type' in df.columns:
         metric_type_index =  list(df.columns).index('Metric_Type')
         for col in df.columns[metric_type_index+1:]:
             try:
                 df[col] = pd.to_numeric(df[col])
             except:
-                df[col] = df[col]
-        
+                df[col] = df[col]    
 
     return df
 
@@ -62,6 +65,8 @@ def konverter_tsv_dr(lines):
         for col in df.columns[metric_type_index+1:]:
             df[col] = pd.to_numeric(df[col])
         
+    index_names = df[ df['Publisher'] == 'None'].index 
+    df.drop(index_names, inplace = True) 
 
     return df
 
