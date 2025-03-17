@@ -20,7 +20,7 @@ def lav_overblik(df):
     forlag_brug = forlag_brug.sort_values(ascending=False).head(10)
 
     forlag_brug = forlag_brug.to_dict()
-
+    
     return forlag_brug
 
 if __name__ == "__main__":
