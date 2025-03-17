@@ -136,6 +136,7 @@ class DataProcessor:
             with pd.ExcelWriter(output_path) as writer:
                 df.to_excel(writer, sheet_name='Counter', index=False)
                 header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
+                st.info("er her 111")
         except Exception:
                 with pd.ExcelWriter(output_path) as writer:
                     df.to_excel(writer, sheet_name='Counter',index=False)
