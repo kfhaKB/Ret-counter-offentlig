@@ -20,6 +20,8 @@ def konverter_tsv_tr(lines):
         return pd.DataFrame(tom_række, columns=data[0])
 
     df = pd.DataFrame(data[1:], columns=data[0])
+    df.columns = [col.replace('"', '') for col in df.columns]
+    df = df.replace({'"': ''}, regex=True)
 
     if 'Metric_Type' in df.columns:
         metric_type_index =  list(df.columns).index('Metric_Type')
@@ -52,6 +54,8 @@ def konverter_tsv_dr(lines):
         return pd.DataFrame(tom_række, columns=data[0])
     
     df = pd.DataFrame(data[1:], columns=data[0])
+    df.columns = [col.replace('"', '') for col in df.columns]
+    df = df.replace({'"': ''}, regex=True)
 
     if 'Metric_Type' in df.columns:
         metric_type_index =  list(df.columns).index('Metric_Type')
