@@ -120,12 +120,10 @@ class DataProcessor:
             df = konverter_tsv_dr(lines)
             for i in range(1, len(df)):
                 df[i] = df[i].replace('"', '')
-                df[i] = int(df[i]) if df[i].isdigit() else df[i]
         elif "TR" in lines[1]:
             df = konverter_tsv_tr(lines)
             for i in range(1, len(df)):
                 df[i] = df[i].replace('"', '')
-                df[i] = int(df[i]) if df[i].isdigit() else df[i]
 
         return df
 
