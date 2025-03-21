@@ -12,6 +12,8 @@ def json_header(data):
     report_ID = data["Report_Header"]["Report_ID"]
     release = data["Report_Header"]["Release"]
     inst_name = data["Report_Header"]["Institution_Name"]
+    for item in data['Report_Header']['Report_Filters']:
+        access_type = item['Value']
     excel_data.append({
         "Report_Name": report_name,
         "Created": created,
@@ -19,7 +21,8 @@ def json_header(data):
         "Customer_ID": customer_ID, 
         "Report_ID": report_ID,
         "Release": release, 
-        "Institution_Name": inst_name
+        "Institution_Name": inst_name,
+        "Access_Type": access_type
     })
 
     df = pd.DataFrame(excel_data)
