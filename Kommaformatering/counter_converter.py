@@ -6,7 +6,7 @@ import os
 from læs_json import json_header, konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j1, konverter_json_tr_j3, konverter_json_tr_j4
 from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
-from læs_csv import konverter_csv_tr
+from læs_csv import konverter_csv_tr, konverter_csv_header
 from læs_excel import konverter_excel_tr
 # import streamlit as st
 
@@ -58,12 +58,17 @@ class DataProcessor:
             raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx eller .txt fil.")
 
     def _load_csv(self):
-        for skip in (self.skip_rows, self.skip_rows + 1):
-            df = pd.read_csv(self.file_path, skiprows=skip, sep=',')
+        for skip in range(0, 20):
+            
+            df = pd.read_csv(self.file_path, skiprows=skip, sep=',', on_bad_lines='skip')
             df.columns = [col.replace(";", "") for col in df.columns]
-            if "Title" in df.columns:
-                df = konverter_csv_tr(df)
-                return df, None
+
+            if "Report_Name" in df.columns[0] or "Report_Name" in df.columns:
+                header = konverter_csv_header(df)
+
+            if "Title" in df.columns and "Publisher" in df.columns:
+                df_counter = konverter_csv_tr(df)
+                return df_counter, header
 
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
@@ -132,16 +137,17 @@ class DataProcessor:
     def gem_result(self, df, header):
         base_filename = os.path.basename(self.file_path).split(".")[0]
         output_filename = f"{base_filename}.xlsx"
-
+        if header is not None:
+            index_bool = True if len(header.columns) == 1 else False
         try:
             output_path = os.path.join(self.base_output_dir, output_filename)
             with pd.ExcelWriter(output_path) as writer:
                 df.to_excel(writer, sheet_name='Counter', index=False)
-                header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
+                header.to_excel(writer, sheet_name='Meta data', index=index_bool) if header is not None else None
         except Exception:
                 with pd.ExcelWriter(output_path) as writer:
                     df.to_excel(writer, sheet_name='Counter',index=False)
-                    header.to_excel(writer, sheet_name='Meta data', index=False) if header is not None else None
+                    header.to_excel(writer, sheet_name='Meta data', index=index_bool) if header is not None else None
                 output_path = output_filename
 
         return output_path
@@ -152,9 +158,9 @@ class DataProcessor:
     
         return output_path, df_cleaned
 
-def main(file_path, skip_rows=13):
+def main(file_path):
     try:
-        processor = DataProcessor(file_path, skip_rows)
+        processor = DataProcessor(file_path)
         output_path, df_cleaned = processor.run()
 
         return output_path, df_cleaned

@@ -30,6 +30,35 @@ def konverter_csv_tr(df):
 
     return pd.DataFrame(processed_rows, columns=columns)
 
+
+def konverter_csv_header(df):
+    
+    for last in range(1, 16):
+        komma_separeret_liste = str(df.iloc[last]).split(',')
+        try:
+            if 'Created_By' in komma_separeret_liste[-3]:
+                break
+        except:
+            komma_separeret_liste = [i.split('\n') for i in komma_separeret_liste]
+            if 'Created_By' in komma_separeret_liste[0][0]:
+                break
+        
+    else:  
+        print("Created_By ikke fundet, metadata ikke tilføjet...")
+        last = 15
+    
+    df = df.iloc[0:last].copy()
+
+    for col in df.columns:
+        df.loc[:, col] = (df[col].astype(str)
+                         .str.replace(';;$', '', regex=True)
+                         .str.strip()
+                         .replace('nan', ''))
+    
+    df = df.fillna('')
+
+    return df
+
 if __name__ == "__main__":
     from analyse import lav_overblik
     file_path = r"F:/BP/ALF/ALF organisation/Grupper/Analysegruppen/Kommaformatering/Filer med dårligt format/TRJ3_Springer_KBNL.csv"
@@ -48,7 +77,7 @@ if __name__ == "__main__":
                 print("Successfully converted data")
             except ValueError as e:
                 print(f"Conversion failed: {e}")
-            break  # Exit loop after finding Title, regardless of conversion success
+            break 
     
     if df is not None:
         print(df.columns)
