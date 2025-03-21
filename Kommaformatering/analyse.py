@@ -20,16 +20,16 @@ def lav_overblik(df):
     forlag_brug = forlag_brug.sort_values(ascending=False).head(10)
 
     forlag_brug = forlag_brug.to_dict()
-
+    
     return forlag_brug
 
 if __name__ == "__main__":
     from læs_tsv import konverter_tsv_tr
     from læs_csv import konverter_csv_tr
 
-    base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "TSV", "AU TR_J3_2020-01_2022-09.tsv")
+    base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "TSV", "AU TR_J3_2020-01_2022-09 - Kopi.tsv")
     with open(base_sti, 'r', encoding='utf-8') as file:
         lines = file.readlines()
     df = konverter_tsv_tr(lines)
     print(df)
-    lav_overblik(df)    
+    lav_overblik(df)  

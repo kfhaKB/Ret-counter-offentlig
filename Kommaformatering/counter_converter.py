@@ -8,7 +8,7 @@ from læs_txt import konverter_txt_tr
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
 from læs_csv import konverter_csv_tr, konverter_csv_header
 from læs_excel import konverter_excel_tr
-# import streamlit as st
+import streamlit as st
 
 def detect_encoding(file_path):
     with open(file_path, 'rb') as f:
@@ -125,13 +125,11 @@ class DataProcessor:
             
         if "DR" in lines[1]:
             df = konverter_tsv_dr(lines)
-            for i in range(len(df)):
-                df[i] = df[i].replace('"', '')
+
         elif "TR" in lines[1]:
             df = konverter_tsv_tr(lines)
-            for i in range(len(df)):
-                df[i] = df[i].replace('"', '')
 
+            
         return df, None
 
     def gem_result(self, df, header):
@@ -144,11 +142,11 @@ class DataProcessor:
             with pd.ExcelWriter(output_path) as writer:
                 df.to_excel(writer, sheet_name='Counter', index=False)
                 header.to_excel(writer, sheet_name='Meta data', index=index_bool) if header is not None else None
+
         except Exception:
+                output_path = output_filename
                 with pd.ExcelWriter(output_path) as writer:
                     df.to_excel(writer, sheet_name='Counter',index=False)
-                    header.to_excel(writer, sheet_name='Meta data', index=index_bool) if header is not None else None
-                output_path = output_filename
 
         return output_path
 

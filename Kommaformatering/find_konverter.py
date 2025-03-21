@@ -21,6 +21,7 @@ if __name__ == "__main__":
     
 
     mappe = "CSV"
+
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", mappe)
     filer = os.listdir(base_sti)
     filer = [fil for fil in filer if "." in fil]
