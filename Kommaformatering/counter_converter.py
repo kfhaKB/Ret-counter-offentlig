@@ -136,7 +136,7 @@ class DataProcessor:
         base_filename = os.path.basename(self.file_path).split(".")[0]
         output_filename = f"{base_filename}.xlsx"
         if header is not None:
-            index_bool = True if len(header.columns) != 0 else False
+            index_bool = True if len(header.columns) == 1 else False
         try:
             output_path = os.path.join(self.base_output_dir, output_filename)
             with pd.ExcelWriter(output_path) as writer:
@@ -144,9 +144,9 @@ class DataProcessor:
                 header.to_excel(writer, sheet_name='Meta data', index=index_bool) if header is not None else None
 
         except Exception:
-                output_path = output_filename
-                with pd.ExcelWriter(output_path) as writer:
-                    df.to_excel(writer, sheet_name='Counter',index=False)
+            output_path = output_filename
+            with pd.ExcelWriter(output_path) as writer:
+                df.to_excel(writer, sheet_name='Counter',index=False)
 
         return output_path
 
