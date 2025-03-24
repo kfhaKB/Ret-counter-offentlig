@@ -7,7 +7,7 @@ from læs_json import json_header, konverter_json_dr_d2, konverter_json_tr_b3, k
 from læs_txt import konverter_txt_tr, txt_header
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr, tsv_header
 from læs_csv import konverter_csv_tr, konverter_csv_header
-from læs_excel import konverter_excel_tr
+from læs_excel import konverter_excel_tr, excel_header
 import streamlit as st
 
 def detect_encoding(file_path):
@@ -18,9 +18,8 @@ def detect_encoding(file_path):
 
 
 class DataProcessor:
-    def __init__(self, file_path, skip_rows=13):
+    def __init__(self, file_path):
         self.file_path = file_path
-        self.skip_rows = skip_rows
 
         file_type_mapping = {
             ".csv": "CSV",
@@ -58,7 +57,7 @@ class DataProcessor:
             raise ValueError(f"Ikke-understøttet filtype: {file_ext}. Upload venligst en .csv, .xlsx eller .txt fil.")
 
     def _load_csv(self):
-        for skip in range(0, 20):
+        for skip in range(20):
             
             df = pd.read_csv(self.file_path, skiprows=skip, sep=',', on_bad_lines='skip')
             df.columns = [col.replace(";", "") for col in df.columns]
@@ -73,16 +72,19 @@ class DataProcessor:
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
     def _load_excel(self):
-        for skip in (self.skip_rows, self.skip_rows + 1):
+        for skip in range(20):
             df_org = pd.read_excel(self.file_path, skiprows=skip)
+            if "Report_Name" in df_org.columns[0] or "Report_Name" in df_org.columns:
+                header = excel_header(df_org)
+
             col = df_org.columns.values[0].split(",")
             col = [field.replace("'", "").replace('"', '') for field in col]
             df = pd.DataFrame(columns=col)
-            if "Title" in df.columns:
+            if "Title" in df.columns and "Publisher" in df.columns:
                 data = df_org.iloc[:, 0]
                 df['Title'] = data
                 df = konverter_excel_tr(df)
-                return df, None
+                return df, header
             
         raise ValueError("Kunne ikke finde 'Title'-kolonnen i filen.")
 
