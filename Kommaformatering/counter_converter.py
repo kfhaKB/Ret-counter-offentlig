@@ -139,12 +139,15 @@ class DataProcessor:
             output_path = os.path.join(self.base_output_dir, output_filename)
             with pd.ExcelWriter(output_path) as writer:
                 df.to_excel(writer, sheet_name='Counter', index=False)
-                header.to_excel(writer, sheet_name='Meta data', index=index_bool) if header is not None else None
+                if header is not None:
+                    header.to_excel(writer, sheet_name='Meta data', index=index_bool) 
 
         except Exception:
             output_path = output_filename
             with pd.ExcelWriter(output_path) as writer:
                 df.to_excel(writer, sheet_name='Counter',index=False)
+                if header is not None:
+                    header.to_excel(writer, sheet_name='Meta data', index=index_bool)
 
         return output_path
 
