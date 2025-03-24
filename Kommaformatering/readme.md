@@ -1,16 +1,16 @@
 # Potentielle forbedringer
 
-## Alle filerne
-- [ ] Tilføj header med metadata til output på hjemmesiden.
+## Generelle forbedringer
+- [x] Tilføj header med metadata til output på hjemmesiden.
 - [x] Kør alle filerne i Analyse
 
 ## Header
 - [x] JSON
 - [x] CSV
-- [ ] TSV
+- [x] TSV
 - [ ] TXT
 - [ ] Excel
 
-# TSV-filerne
-- [ ] Fjern citationstegn "" i kolonner, der ikke er titel kolonner
+## TSV-filerne
+- [x] Fjern citationstegn "" i kolonner, der ikke er titel kolonner
 

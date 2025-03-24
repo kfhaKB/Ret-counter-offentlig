@@ -5,7 +5,7 @@ import json
 import os
 from læs_json import json_header, konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j1, konverter_json_tr_j3, konverter_json_tr_j4
 from læs_txt import konverter_txt_tr
-from læs_tsv import konverter_tsv_tr, konverter_tsv_dr
+from læs_tsv import konverter_tsv_tr, konverter_tsv_dr, tsv_header
 from læs_csv import konverter_csv_tr, konverter_csv_header
 from læs_excel import konverter_excel_tr
 import streamlit as st
@@ -122,13 +122,14 @@ class DataProcessor:
         fil_encoding = detect_encoding(self.file_path)
         with open(self.file_path, 'r', encoding=fil_encoding) as file:
             lines = file.readlines()
-            
+
+        header = tsv_header(lines)   
         if "DR" in lines[1]:
             df = konverter_tsv_dr(lines)
         elif "TR" in lines[1]:
             df = konverter_tsv_tr(lines)
 
-        return df, None
+        return df, header
 
     def gem_result(self, df, header):
         base_filename = os.path.basename(self.file_path).split(".")[0]

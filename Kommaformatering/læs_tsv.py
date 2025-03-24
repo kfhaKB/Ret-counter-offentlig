@@ -93,6 +93,20 @@ def konverter_tsv_dr(lines):
 
     return df
 
+def tsv_header(lines):
+    end_row = None
+    for i, line in enumerate(lines):
+        if "Platform" in line:
+            end_row = i
+            break
+    
+    data = [line.strip().split('\t') for line in lines[:end_row]]
+    data_dict = {item[0].strip('"'): item[1].strip('"') if len(item) > 1 else None for item in data}
+
+    df = pd.DataFrame([data_dict]).T
+    df.columns = ["Værdier"]
+    return df    
+
 if __name__ == "__main__":
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", "reports.tsv")
 
