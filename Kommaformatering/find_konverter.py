@@ -17,9 +17,9 @@ if __name__ == "__main__":
     from analyse import lav_overblik
     # Kører alle filerne igennem for at tjekke, at de kan konverteres. Anbefales at gøre før push.
 
-    MAX_FILE_SIZE = 40 * 1024 * 1024  # hvis du er doven og ikke vil vente længe...
+    #MAX_FILE_SIZE = 40 * 1024 * 1024  # hvis du er doven og ikke vil vente længe...
     
-    mappe = "TSV"
+    mappe = "TXT"
 
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", mappe)
     filer = os.listdir(base_sti)
@@ -32,9 +32,9 @@ if __name__ == "__main__":
         fil_sti = os.path.join(base_sti, fil)
         file_size = os.path.getsize(fil_sti)
         
-        if file_size > MAX_FILE_SIZE:
-            print(f"Springer {fil} over - filen er for stor ({file_size / (1024*1024):.1f} MB)")
-            continue
+        #if file_size > MAX_FILE_SIZE:
+        #    print(f"Springer {fil} over - filen er for stor ({file_size / (1024*1024):.1f} MB)")
+        #    continue
 
         tqdm_bar.set_postfix(fil=fil)
 

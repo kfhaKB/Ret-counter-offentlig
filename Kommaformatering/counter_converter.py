@@ -4,7 +4,7 @@ import chardet
 import json
 import os
 from læs_json import json_header, konverter_json_dr_d2, konverter_json_tr_b3, konverter_json_tr_master, konverter_json_tr_j1, konverter_json_tr_j3, konverter_json_tr_j4
-from læs_txt import konverter_txt_tr
+from læs_txt import konverter_txt_tr, txt_header
 from læs_tsv import konverter_tsv_tr, konverter_tsv_dr, tsv_header
 from læs_csv import konverter_csv_tr, konverter_csv_header
 from læs_excel import konverter_excel_tr
@@ -90,9 +90,9 @@ class DataProcessor:
         fil_encoding = detect_encoding(self.file_path)
         with open(self.file_path, encoding=fil_encoding) as f:
             lines = f.readlines()
-
+        header = txt_header(lines)
         df = konverter_txt_tr(lines)
-        return df, None
+        return df, header
     
     def _load_json(self):
         fil_encoding = detect_encoding(self.file_path)
