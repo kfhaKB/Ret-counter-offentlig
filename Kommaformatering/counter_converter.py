@@ -76,10 +76,15 @@ class DataProcessor:
             df_org = pd.read_excel(self.file_path, skiprows=skip)
             if "Report_Name" in df_org.columns[0] or "Report_Name" in df_org.columns:
                 header = excel_header(df_org)
+            
+            
+            if "Title" in df_org.columns and "Publisher" in df_org.columns and not df_org['Publisher'].isnull().all() and not df_org['YOP'].isnull().all():
+                return df_org, header
 
             col = df_org.columns.values[0].split(",")
             col = [field.replace("'", "").replace('"', '') for field in col]
             df = pd.DataFrame(columns=col)
+
             if "Title" in df.columns and "Publisher" in df.columns:
                 data = df_org.iloc[:, 0]
                 df['Title'] = data
