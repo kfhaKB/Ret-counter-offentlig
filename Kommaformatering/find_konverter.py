@@ -3,10 +3,10 @@ from counter_converter import main as counter_converter
 
 def find_konverter(sti):
     converters = [
-        ("counter converter", counter_converter) # Lavet så vi kan udvide med flere konverteringsfunktioner.
+        ("counter converter", counter_converter) # Lavet så vi kan udvide med flere konverteringsfunktioner. Eks, hvis vi skal konvertere titellister eller andet.
     ]
     
-    for name, converter in converters:
+    for _, converter in converters:
         output_file, df_cleaned = converter(sti)
         
     return output_file, df_cleaned
@@ -19,7 +19,6 @@ if __name__ == "__main__":
 
     MAX_FILE_SIZE = 40 * 1024 * 1024  # hvis du er doven og ikke vil vente længe...
     
-
     mappe = "CSV"
 
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", mappe)

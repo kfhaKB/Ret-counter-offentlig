@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def process_row(row, number_of_columns):
     """Renser og behandler en enkelt række fra DataFrame."""
@@ -15,12 +16,37 @@ def process_row(row, number_of_columns):
 
     return row
 
+def titel_er_i_row_name(df):
+
+    names = []
+    for i in range(len(df)):
+        names.append(df.iloc[i].name)
+
+    df['Publisher'] = df['Title']
+    df['Title'] = names
+
+    columns = df.columns
+    for i, col in enumerate(columns[::-1]):
+        j = len(columns)-i-1
+        if col in ['Publisher', 'Title']:
+            continue
+        if col == "Publisher_ID":
+            df[col] = np.nan
+            return df
+        else:
+            df[columns[j]] = df[columns[j-1]]
+
+    return df
+
 def konverter_csv_tr(df):
     columns = df.columns
     nr_commas = len(columns) - 1
 
     if not df['Publisher'].isnull().all():
         return df
+    
+    if df['Publisher'].isnull().all() and not df['Publisher_ID'].isnull().all():
+        return titel_er_i_row_name(df)
 
     processed_rows = [process_row(row, nr_commas) for _, row in df.iterrows()]
     processed_rows = [row for row in processed_rows if row]

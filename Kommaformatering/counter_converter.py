@@ -125,11 +125,9 @@ class DataProcessor:
             
         if "DR" in lines[1]:
             df = konverter_tsv_dr(lines)
-
         elif "TR" in lines[1]:
             df = konverter_tsv_tr(lines)
 
-            
         return df, None
 
     def gem_result(self, df, header):
