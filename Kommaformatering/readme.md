@@ -18,3 +18,6 @@
 ## Excel-filerne
 - [x] Optimer funktionen. Den er meget langsom.
 - [ ] Læs header for filer uden fejl i. 
+
+## CSV-filerne
+- [ ] Opdater til at kunne læse T&F KU/AU 2024 - NY

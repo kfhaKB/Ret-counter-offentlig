@@ -65,7 +65,10 @@ class DataProcessor:
             if "Report_Name" in df.columns[0] or "Report_Name" in df.columns:
                 header = konverter_csv_header(df)
 
-            if "Title" in df.columns and "Publisher" in df.columns or (len(df.columns) > 0 and "Title" in df.columns[0] or "Publisher" in df.columns[0]):
+            if "Title" in df.columns[0] and  "Publisher" in df.columns[0]:
+                raise ValueError("Vi kan ikke konvertere denne filtype endnu.")
+
+            if "Title" in df.columns and "Publisher" in df.columns:
                 df_counter = konverter_csv_tr(df)
                 return df_counter, header
 

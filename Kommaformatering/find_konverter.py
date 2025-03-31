@@ -19,7 +19,7 @@ if __name__ == "__main__":
 
     #MAX_FILE_SIZE = 40 * 1024 * 1024  # hvis du er doven og ikke vil vente længe...
     
-    mappe = "EXCEL"
+    mappe = "CSV"
 
     base_sti = os.path.join("F:", "BP", "ALF", "ALF organisation", "Grupper", "Analysegruppen", "Kommaformatering", "Filer med dårligt format", mappe)
     filer = os.listdir(base_sti)
