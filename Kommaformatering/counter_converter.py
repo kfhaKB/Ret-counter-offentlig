@@ -65,7 +65,7 @@ class DataProcessor:
             if "Report_Name" in df.columns[0] or "Report_Name" in df.columns:
                 header = konverter_csv_header(df)
 
-            if "Title" in df.columns and "Publisher" in df.columns:
+            if "Title" in df.columns and "Publisher" in df.columns or (len(df.columns) > 0 and "Title" in df.columns[0] or "Publisher" in df.columns[0]):
                 df_counter = konverter_csv_tr(df)
                 return df_counter, header
 
@@ -73,19 +73,24 @@ class DataProcessor:
 
     def _load_excel(self):
         for skip in range(20):
-            df_org = pd.read_excel(self.file_path, skiprows=skip)
+
+            df_org = pd.read_excel(self.file_path, skiprows=skip, nrows=50)
             if "Report_Name" in df_org.columns[0] or "Report_Name" in df_org.columns:
                 header = excel_header(df_org)
             
-            
             if "Title" in df_org.columns and "Publisher" in df_org.columns and not df_org['Publisher'].isnull().all() and not df_org['YOP'].isnull().all():
-                return df_org, header
-
+                df = pd.read_excel(self.file_path, skiprows=skip)
+                return df, header
+    
             col = df_org.columns.values[0].split(",")
             col = [field.replace("'", "").replace('"', '') for field in col]
             df = pd.DataFrame(columns=col)
 
             if "Title" in df.columns and "Publisher" in df.columns:
+                df_org = pd.read_excel(self.file_path, skiprows=skip)
+                col = df_org.columns.values[0].split(",")
+                col = [field.replace("'", "").replace('"', '') for field in col]
+                df = pd.DataFrame(columns=col)
                 data = df_org.iloc[:, 0]
                 df['Title'] = data
                 df = konverter_excel_tr(df)

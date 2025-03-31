@@ -28,8 +28,8 @@ def excel_header(df):
             try:
                 key, value = item.split(',', 1)
                 data_dict[key.strip('"')] = value.strip('"')
-            except ValueError:
-                print(f"Advarsel: Forkert header '{item}'")
+            except:
+                continue
         else:
             break 
 
