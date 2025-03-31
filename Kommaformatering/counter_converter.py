@@ -66,7 +66,10 @@ class DataProcessor:
                 header = konverter_csv_header(df)
 
             if "Title" in df.columns[0] and  "Publisher" in df.columns[0]:
-                raise ValueError("Vi kan ikke konvertere denne filtype endnu.")
+                fil_encoding = detect_encoding(self.file_path)
+                with open(self.file_path, 'r', encoding=fil_encoding) as file:
+                    lines = file.readlines()
+                    return konverter_txt_tr(lines), txt_header(lines) 
 
             if "Title" in df.columns and "Publisher" in df.columns:
                 df_counter = konverter_csv_tr(df)

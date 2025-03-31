@@ -11,12 +11,17 @@ def konverter_txt_tr(data):
         if "Title" in row and "Publisher" in row and "Publisher_ID" in row:
             read = True
             header = row.split(",")
-            header = [field.replace('\t\t\n', '') for field in header]
+            header = [head.replace('\t\t\n', '') for head in header]
+            header = [head.replace('"', '') for head in header]
+            header = [head.replace(';', '') for head in header]
             nr_commas = len(header) - 1
             rows.append(header)
             continue
         elif read:
             parts = row.rsplit(',', nr_commas)
+            parts = [part.replace('"','') for part in parts]
+            parts = [part.replace(";",'') for part in parts]
+            parts = [int(part) if part.isdigit() else part for part in parts]
             rows.append(parts)
     df = pd.DataFrame(rows[1:], columns=rows[0]) if rows else pd.DataFrame()
     return df
