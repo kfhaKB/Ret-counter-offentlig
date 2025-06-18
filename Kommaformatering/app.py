@@ -14,6 +14,12 @@ uploaded_file = st.file_uploader("Upload en fil (max 100 MB)", type=["csv", "xls
 
 #st.info('Hjemmesiden er i øjeblikket under opbygning, vær opmærksom på, at der kan være fejl i filerne.')
 
+st.info("""
+Streamlit behandler uploadede data udelukkende i **RAM** på den server, hvor applikationen kører. Data slettes fra hukommelsen, så snart behandlingen er afsluttet, og resultatet er downloadet.
+
+Hjemmesiden hostes via **Streamlit Cloud** på Google Cloud Platform, som anvender sikre datacentre og lever op til industristandarder (ISO-27001, SOC 1, SOC 2). Al datatrafik er krypteret med 256-bit kryptering via **HTTPS** og sikres med **HTTP Secure Transport Security (HSTS)**.
+""")
+
 if uploaded_file is not None:
     try:
         file_bytes = uploaded_file.getvalue()
